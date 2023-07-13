@@ -5,8 +5,8 @@ import (
 	"net"
 	"os"
 	database "promo/app/databases"
-	promoProto "promo/modules/handler/pb"
-	promoUseCase "promo/modules/usecase"
+	promoControllers "promo/modules/controllers"
+	promoProto "promo/modules/protobuf/pb"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -26,8 +26,8 @@ func main() {
 	db := database.NewDatabases()
 	gprcServer := grpc.NewServer()
 
-	//Registered Promo usecase
-	promoUsecase := promoUseCase.NewPromoUseCase(db)
+	//Registered Promo Services
+	promoUsecase := promoControllers.NewPromoUseCase(db)
 	promoProto.RegisterPromoServiceServer(gprcServer, promoUsecase)
 
 	log.Printf("Starting %s server on %s port", os.Getenv("APP_PROTOCOL"), os.Getenv("APP_PORT"))

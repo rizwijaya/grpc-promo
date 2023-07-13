@@ -1,7 +1,7 @@
 syntax = "proto3";
 package promo;
 
-option go_package = "promo/handler/pb";
+option go_package = "promo/modules/protobuf/pb";
 
 service PromoService {
   rpc GetPromoByCode(Code) returns (Promo);
