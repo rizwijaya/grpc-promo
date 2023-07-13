@@ -7,7 +7,7 @@ service PromoService {
   rpc GetPromoByCode(Code) returns (Promo);
   rpc GetOrderList(Pages) returns (Orders);
   rpc GetOrderDetail(OrderId) returns (Order);
-  rpc CreateOrder(CreateOrderRequest) returns (Order);
+  rpc CreateOrder(CreateOrderRequest) returns (ListOrder);
 }
 
 message Code {

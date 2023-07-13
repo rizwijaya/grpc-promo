@@ -25,7 +25,7 @@ type PromoServiceClient interface {
 	GetPromoByCode(ctx context.Context, in *Code, opts ...grpc.CallOption) (*Promo, error)
 	GetOrderList(ctx context.Context, in *Pages, opts ...grpc.CallOption) (*Orders, error)
 	GetOrderDetail(ctx context.Context, in *OrderId, opts ...grpc.CallOption) (*Order, error)
-	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*Order, error)
+	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*ListOrder, error)
 }
 
 type promoServiceClient struct {
@@ -63,8 +63,8 @@ func (c *promoServiceClient) GetOrderDetail(ctx context.Context, in *OrderId, op
 	return out, nil
 }
 
-func (c *promoServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*Order, error) {
-	out := new(Order)
+func (c *promoServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*ListOrder, error) {
+	out := new(ListOrder)
 	err := c.cc.Invoke(ctx, "/promo.PromoService/CreateOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ type PromoServiceServer interface {
 	GetPromoByCode(context.Context, *Code) (*Promo, error)
 	GetOrderList(context.Context, *Pages) (*Orders, error)
 	GetOrderDetail(context.Context, *OrderId) (*Order, error)
-	CreateOrder(context.Context, *CreateOrderRequest) (*Order, error)
+	CreateOrder(context.Context, *CreateOrderRequest) (*ListOrder, error)
 	mustEmbedUnimplementedPromoServiceServer()
 }
 
@@ -96,7 +96,7 @@ func (UnimplementedPromoServiceServer) GetOrderList(context.Context, *Pages) (*O
 func (UnimplementedPromoServiceServer) GetOrderDetail(context.Context, *OrderId) (*Order, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrderDetail not implemented")
 }
-func (UnimplementedPromoServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*Order, error) {
+func (UnimplementedPromoServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*ListOrder, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
 }
 func (UnimplementedPromoServiceServer) mustEmbedUnimplementedPromoServiceServer() {}

@@ -39,3 +39,7 @@ func (p *PromoUseCase) GetOrderById(id string) (*promoProto.Order, error) {
 
 	return order, nil
 }
+
+func (p *PromoUseCase) CreateOrder(orderAttr string, promoCode string) (*promoProto.ListOrder, error) {
+	return p.repository.CreateOrder(orderAttr, promoCode)
+}

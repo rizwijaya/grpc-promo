@@ -74,3 +74,18 @@ func (p *PromoController) GetOrderDetail(ctx context.Context, id *promoProto.Ord
 
 	return order, err
 }
+
+func (p *PromoController) CreateOrder(ctx context.Context, orderParam *promoProto.CreateOrderRequest) (*promoProto.ListOrder, error) {
+	if orderParam.OrderAttr == "" || orderParam.PromoCode == "" {
+		return nil, status.Errorf(codes.InvalidArgument, errVal.ErrInvalidArgument("Order Attribut/Kode Promo"))
+	}
+	order, err := p.usecase.CreateOrder(orderParam.OrderAttr, orderParam.PromoCode)
+	if err != nil {
+		if err.Error() == errVal.ErrPromoCodeinOrderNotFound {
+			return nil, status.Errorf(codes.NotFound, errVal.ErrNotFound("Kode Promo"))
+		}
+		log.Println(err)
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+	return order, nil
+}

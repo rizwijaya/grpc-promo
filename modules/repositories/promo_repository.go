@@ -1,6 +1,10 @@
 package repository
 
-import promoProto "promo/modules/protobuf/pb"
+import (
+	promoProto "promo/modules/protobuf/pb"
+
+	"github.com/google/uuid"
+)
 
 func (p *PromoRepository) GetPromoByCode(code string) (*promoProto.Promo, error) {
 	var promo promoProto.Promo
@@ -67,6 +71,16 @@ func (p *PromoRepository) GetOrderById(id string) (*promoProto.Order, error) {
 			return nil, err
 		}
 		order.Promos = append(order.Promos, &promo)
+	}
+	return &order, nil
+}
+
+func (p *PromoRepository) CreateOrder(orderAttr string, promoCode string) (*promoProto.ListOrder, error) {
+	var order promoProto.ListOrder
+	query := `INSERT INTO orders (order_id, order_attr, promo_code) VALUES ($1, $2, $3) RETURNING order_id, order_attr, promo_code`
+	err := p.db.QueryRowx(query, uuid.New(), orderAttr, promoCode).Scan(&order.OrderId, &order.OrderAttr, &order.PromoCode)
+	if err != nil {
+		return nil, err
 	}
 	return &order, nil
 }
