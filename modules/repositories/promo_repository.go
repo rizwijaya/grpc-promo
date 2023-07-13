@@ -48,19 +48,21 @@ func (p *PromoRepository) GetAllOrder(offset int64, limit int64) ([]*promoProto.
 
 func (p *PromoRepository) GetOrderById(id string) (*promoProto.Order, error) {
 	var order promoProto.Order
-	query :=
-		`select
-		o.order_id, o.order_attr, o.promo_code, p.promo_id, p.promo_code as promo_active, p.promo_attr 
-	from
-		orders o 
-	inner join
-		order_promo op
-	on o.order_id = op.order_id 
-	inner join 
-		promo p
-	on op.promo_id = p.promo_id 
-	where
-		o.order_id = $1::uuid;`
+	query := `
+		SELECT
+			o.order_id, o.order_attr, o.promo_code, p.promo_id, 
+			p.promo_code as promo_active, p.promo_attr 
+		FROM
+			orders o 
+		INNER JOIN
+			order_promo op
+		ON o.order_id = op.order_id 
+		INNER JOIN 
+			promo p
+		ON op.promo_id = p.promo_id 
+		WHERE
+			o.order_id = $1::uuid;
+	`
 	row, err := p.db.Queryx(query, id)
 	if err != nil {
 		return nil, err
@@ -77,7 +79,12 @@ func (p *PromoRepository) GetOrderById(id string) (*promoProto.Order, error) {
 
 func (p *PromoRepository) CreateOrder(orderAttr string, promoCode string) (*promoProto.ListOrder, error) {
 	var order promoProto.ListOrder
-	query := `INSERT INTO orders (order_id, order_attr, promo_code) VALUES ($1, $2, $3) RETURNING order_id, order_attr, promo_code`
+	query := `
+		INSERT INTO orders (
+			order_id, order_attr, promo_code
+		) VALUES ($1, $2, $3) 
+		RETURNING order_id, order_attr, promo_code
+	`
 	err := p.db.QueryRowx(query, uuid.New(), orderAttr, promoCode).Scan(&order.OrderId, &order.OrderAttr, &order.PromoCode)
 	if err != nil {
 		return nil, err
