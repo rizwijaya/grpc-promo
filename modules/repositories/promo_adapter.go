@@ -10,6 +10,7 @@ type PromoRepositoryPresenter interface {
 	GetPromoByCode(code string) (*promoProto.Promo, error)
 	TotalData(table string) (int64, error)
 	GetAllOrder(offset int64, limit int64) ([]*promoProto.ListOrder, error)
+	GetOrderById(id string) (*promoProto.Order, error)
 }
 
 type PromoRepository struct {

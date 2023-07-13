@@ -41,3 +41,32 @@ func (p *PromoRepository) GetAllOrder(offset int64, limit int64) ([]*promoProto.
 	}
 	return orders, nil
 }
+
+func (p *PromoRepository) GetOrderById(id string) (*promoProto.Order, error) {
+	var order promoProto.Order
+	query :=
+		`select
+		o.order_id, o.order_attr, o.promo_code, p.promo_id, p.promo_code as promo_active, p.promo_attr 
+	from
+		orders o 
+	inner join
+		order_promo op
+	on o.order_id = op.order_id 
+	inner join 
+		promo p
+	on op.promo_id = p.promo_id 
+	where
+		o.order_id = $1::uuid;`
+	row, err := p.db.Queryx(query, id)
+	if err != nil {
+		return nil, err
+	}
+	for row.Next() {
+		var promo promoProto.Promo
+		if err := row.Scan(&order.OrderId, &order.OrderAttr, &order.PromoCode, &promo.PromoId, &promo.PromoCode, &promo.PromoAttr); err != nil {
+			return nil, err
+		}
+		order.Promos = append(order.Promos, &promo)
+	}
+	return &order, nil
+}

@@ -56,3 +56,21 @@ func (p *PromoController) GetOrderList(ctx context.Context, pageParam *promoProt
 	}
 	return response, nil
 }
+
+func (p *PromoController) GetOrderDetail(ctx context.Context, id *promoProto.OrderId) (*promoProto.Order, error) {
+	if id.OrderId == "" {
+		return nil, status.Errorf(codes.InvalidArgument, errVal.ErrInvalidArgument("Id Order"))
+	}
+
+	order, err := p.usecase.GetOrderById(id.OrderId)
+	if err != nil {
+		if err.Error() == errVal.ErrDataNotFound || err.Error() == errVal.ErrInvalidUUID(id.OrderId) {
+			return nil, status.Errorf(codes.NotFound, errVal.ErrNotFound("Order"))
+		}
+
+		log.Println(err)
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	return order, err
+}

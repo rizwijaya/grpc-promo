@@ -5,5 +5,9 @@ func ErrNotFound(data string) string {
 }
 
 func ErrInvalidArgument(data string) string {
-	return "Data " + data + " yang anda inputkan tidak valid."
+	return data + " yang anda inputkan tidak valid."
+}
+
+func ErrInvalidUUID(data string) string {
+	return "pq: invalid input syntax for type uuid: \"" + data + "\""
 }
