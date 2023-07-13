@@ -27,7 +27,7 @@ func main() {
 	gprcServer := grpc.NewServer()
 
 	//Registered Promo Services
-	promoUsecase := promoControllers.NewPromoUseCase(db)
+	promoUsecase := promoControllers.NewPromoController(db)
 	promoProto.RegisterPromoServiceServer(gprcServer, promoUsecase)
 
 	log.Printf("Starting %s server on %s port", os.Getenv("APP_PROTOCOL"), os.Getenv("APP_PORT"))

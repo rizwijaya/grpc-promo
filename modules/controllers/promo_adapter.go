@@ -8,15 +8,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type PromoUseCase struct {
+type PromoController struct {
 	usecase *promoUseCase.PromoUseCase
 	promoProto.UnimplementedPromoServiceServer
 }
 
-func NewPromoUseCase(db *sqlx.DB) *PromoUseCase {
+func NewPromoController(db *sqlx.DB) *PromoController {
 	promoRepo := promoRepository.NewPromoRepository(db)
 	promoUseCase := promoUseCase.NewPromoUseCase(promoRepo)
-	return &PromoUseCase{
+	return &PromoController{
 		usecase: promoUseCase,
 	}
 }

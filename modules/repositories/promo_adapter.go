@@ -8,6 +8,8 @@ import (
 
 type PromoRepositoryPresenter interface {
 	GetPromoByCode(code string) (*promoProto.Promo, error)
+	TotalData(table string) (int64, error)
+	GetAllOrder(offset int64, limit int64) ([]*promoProto.ListOrder, error)
 }
 
 type PromoRepository struct {
