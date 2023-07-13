@@ -1,8 +1,13 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	promoProto "promo/modules/protobuf/pb"
+
+	"github.com/jmoiron/sqlx"
+)
 
 type PromoRepositoryPresenter interface {
+	GetPromoByCode(code string) (*promoProto.Promo, error)
 }
 
 type PromoRepository struct {
