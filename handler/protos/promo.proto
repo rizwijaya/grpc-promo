@@ -1,0 +1,54 @@
+syntax = "proto3";
+package promo;
+
+option go_package = "promo/handler/pb";
+
+service PromoService {
+  rpc GetPromoByCode(Code) returns (Promo);
+  rpc GetOrderList(Pages) returns (Orders);
+  rpc GetOrderDetail(OrderId) returns (Order);
+  rpc CreateOrder(CreateOrderRequest) returns (Order);
+}
+
+message Code {
+  string promo_code = 1;
+}
+
+message Promo {
+  string promo_id = 1;
+  string promo_attr = 2;
+  string promo_code = 3;
+}
+
+message Pages {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message Order {
+  string order_id = 1;
+  string order_attr = 2;
+  string promo_code = 3;
+  repeated Promo promos = 4;
+}
+
+message Orders {
+  Pagination pagination = 1;
+  repeated Order orders = 2;
+}
+
+message OrderId {
+  string order_id = 1;
+}
+
+message CreateOrderRequest {
+  string order_attr = 1;
+  string promo_code = 2;
+}
+
+message Pagination {
+  uint64 total = 1;
+  uint32 per_page = 2;
+  uint32 current_page = 3;
+  uint32 last_page = 4;
+}
